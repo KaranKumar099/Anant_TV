@@ -15,7 +15,21 @@ import PlaylistCard from "./Cards/PlaylistCard";
 import WatchHistory from "./components/WatchHistory";
 import PlaylistPage from "./components/PlaylistPage";
 
-export {Layout, Home, Login, Register, Subscriptions, User, 
-        YourVideos, PublishVideo, UpdateVideo, Playlists, 
-        CreatePlaylist, EditPlaylist, VideoCard, PlaylistCard,
-        WatchHistory, PlaylistPage }
+export {
+    Layout,
+    Home,
+    Login,
+    Register,
+    Subscriptions,
+    User,
+    YourVideos,
+    PublishVideo,
+    UpdateVideo,
+    Playlists,
+    CreatePlaylist,
+    EditPlaylist,
+    VideoCard,
+    PlaylistCard,
+    WatchHistory,
+    PlaylistPage,
+};

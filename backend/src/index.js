@@ -1,24 +1,22 @@
-import dotenv from "dotenv"
-import dbConnnect from "./db/db.js"
-import {app} from "./app.js"
+import dotenv from "dotenv";
+import dbConnnect from "./db/db.js";
+import { app } from "./app.js";
 
 dotenv.config({
     path: "./.env",
-})
+});
 
 const port = process.env.PORT || 8000;
 
 dbConnnect()
-.then(()=>{
-    app.listen(port,()=>{
-        console.log(`App is listening on port : ${port}`)
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`App is listening on port : ${port}`);
+        });
     })
-})
-.catch((err)=>{
-    console.log("Error ki MKC :: MongoDB connection Failed : ",err);
-})
-
-
+    .catch((err) => {
+        console.log("Error ki MKC :: MongoDB connection Failed : ", err);
+    });
 
 // import mongoose from "mongoose";
 // import {DB_NAME} from "./constants"

@@ -1,52 +1,51 @@
-import { useContext, createContext, useEffect, useState } from "react"
+import { useContext, createContext, useEffect, useState } from "react";
 import axios from "axios";
 
-const AuthContext=createContext();
+const AuthContext = createContext();
 
-export const AuthProvider=(({children})=>{
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [user, setUser]= useState(null)
+export const AuthProvider = ({ children }) => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
 
-    const fetchUser=async (token)=>{
-      try {
-          // console.log("token : ",token)
-          const response= await axios.get(
-              "http://localhost:8000/api/v1/users/get-user",
-              {
-                  headers: {Authorization: `Bearer ${token}`}
-              }
-          )
-          setUser(response.data.data)
-          console.log("response : ",response.data.data)
-      } catch (error) {
-          console.error("Failed to fetch user:", error)
-      }
-    }
-    
-    useEffect(()=>{
-        const token=localStorage.getItem("accessToken")
+    const fetchUser = async (token) => {
+        try {
+            // console.log("token : ",token)
+            const response = await axios.get(
+                "http://localhost:8000/api/v1/users/get-user",
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+            setUser(response.data.data);
+            console.log("response : ", response.data.data);
+        } catch (error) {
+            console.error("Failed to fetch user:", error);
+        }
+    };
+
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
         if (token) {
+            setIsAuthenticated(true);
+            fetchUser(token);
+        }
+    }, []);
+
+    const login = (token) => {
         setIsAuthenticated(true);
         fetchUser(token);
-      }
-    },[])
+    };
 
-    const login=(token)=>{
-        setIsAuthenticated(true)
-        fetchUser(token)
-    }
+    const logout = () => {
+        setIsAuthenticated(false);
+        setUser(null);
+    };
 
-    const logout=()=>{
-        setIsAuthenticated(false)
-        setUser(null)
-    }
+    return (
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, user }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
 
-    
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user}}>
-      {children}
-    </AuthContext.Provider>
-  );
-})
-
-export const useAuth = ()=>useContext(AuthContext)
+export const useAuth = () => useContext(AuthContext);

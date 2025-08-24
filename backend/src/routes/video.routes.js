@@ -1,8 +1,15 @@
-import { Router } from 'express';
-import { deleteVideo, getAllVideos, getVideoById, publishAVideo, 
-        togglePublishStatus, updateVideo, incrementViews } from "../controllers/video.controller.js"
-import {jwtVerification} from "../middlewares/auth.middleware.js"
-import {upload} from "../middlewares/multer.middleware.js"
+import { Router } from "express";
+import {
+    deleteVideo,
+    getAllVideos,
+    getVideoById,
+    publishAVideo,
+    togglePublishStatus,
+    updateVideo,
+    incrementViews,
+} from "../controllers/video.controller.js";
+import { jwtVerification } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 router.use(jwtVerification); // Apply verifyJWT middleware to all routes in this file
@@ -20,7 +27,6 @@ router
                 name: "thumbnail",
                 maxCount: 1,
             },
-            
         ]),
         publishAVideo
     );
@@ -29,10 +35,10 @@ router
     .route("/:videoId")
     .get(getVideoById)
     .delete(deleteVideo)
-    .patch(upload.single("thumbnail"), updateVideo)
+    .patch(upload.single("thumbnail"), updateVideo);
 
-router.route("/:videoId/view").post(incrementViews)
+router.route("/:videoId/view").post(incrementViews);
 
 router.route("/toggle/publish/:videoId").patch(togglePublishStatus);
 
-export default router
+export default router;
