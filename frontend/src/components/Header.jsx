@@ -1,6 +1,6 @@
 import "remixicon/fonts/remixicon.css";
 import { NavLink } from "react-router-dom";
-import LogOut from "./Logout";
+import LogOut from "./LogOut";
 import { useAuth } from "../Context/AuthContext";
 
 function Header() {
