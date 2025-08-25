@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
@@ -39,7 +39,7 @@ function PublishVideo() {
 
             const token = localStorage.getItem("accessToken");
             const response = await axios.post(
-                "http://localhost:8000/api/v1/videos/",
+                `${import.meta.env.VITE_BACKEND_URL}/videos/`,
                 formData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );

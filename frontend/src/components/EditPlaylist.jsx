@@ -13,7 +13,7 @@ function EditPlaylist() {
         async function prevDets() {
             const token = localStorage.getItem("accessToken");
             const res = await axios.get(
-                `http://localhost:8000/api/v1/playlist/${id}`,
+                `${import.meta.env.VITE_BACKEND_URL}/playlist/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -39,7 +39,7 @@ function EditPlaylist() {
         try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.patch(
-                `http://localhost:8000/api/v1/playlist/${id}`,
+                `${import.meta.env.VITE_BACKEND_URL}/playlist/${id}`,
                 {
                     newName: playlistDets.name,
                     newDescription: playlistDets.description,

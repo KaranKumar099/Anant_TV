@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 function CreatePlaylist() {
@@ -18,7 +18,7 @@ function CreatePlaylist() {
         try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.post(
-                "http://localhost:8000/api/v1/playlist/",
+                `${import.meta.env.VITE_BACKEND_URL}/playlist/`,
                 playlistDets,
                 { headers: { Authorization: `Bearer ${token}` } }
             );

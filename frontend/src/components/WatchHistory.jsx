@@ -9,7 +9,7 @@ const WatchHistory = () => {
             try {
                 const token = localStorage.getItem("accessToken");
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/watch-history",
+                    `${import.meta.env.VITE_BACKEND_URL}/watch-history`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -17,7 +17,7 @@ const WatchHistory = () => {
                         withCredentials: true,
                     }
                 );
-                console.log(response.data.data);
+                // console.log(response.data.data);
                 setHistory(response.data.data);
             } catch (error) {
                 console.error("History Fetching error :: ", error.message);
@@ -30,7 +30,7 @@ const WatchHistory = () => {
         try {
             const token = localStorage.getItem("accessToken");
             const res = await axios.delete(
-                `http://localhost:8000/api/v1/watch-history/${videoId}`,
+                `${import.meta.env.VITE_BACKEND_URL}/watch-history/${videoId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -38,7 +38,7 @@ const WatchHistory = () => {
                     withCredentials: true,
                 }
             );
-            console.log(res.data);
+            // console.log(res.data);
             setHistory(history.filter((item) => item.video._id !== videoId));
         } catch (error) {
             console.error(error);
@@ -49,7 +49,7 @@ const WatchHistory = () => {
         try {
             const token = localStorage.getItem("accessToken");
             const res = await axios.delete(
-                `http://localhost:8000/api/v1/watch-history`,
+                `${import.meta.env.VITE_BACKEND_URL}/watch-history`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ const WatchHistory = () => {
                     withCredentials: true,
                 }
             );
-            console.log(res.data);
+            // console.log(res.data);
             setHistory([]);
         } catch (error) {
             console.error(error);

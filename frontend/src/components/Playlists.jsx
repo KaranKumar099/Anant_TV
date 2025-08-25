@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router";
@@ -12,7 +12,7 @@ function Playlists() {
             try {
                 const token = localStorage.getItem("accessToken");
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/playlist/user/${user?._id}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/playlist/user/${user?._id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -20,7 +20,7 @@ function Playlists() {
                         withCredentials: true,
                     }
                 );
-                console.log(response.data.data);
+                // console.log(response.data.data);
                 setPlaylists(response.data.data);
             } catch (error) {
                 console.error("Playlists Fetching error :: ", error.message);

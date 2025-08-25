@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext";
 
@@ -36,7 +36,7 @@ function EditChannel() {
         try {
             const token = localStorage.getItem("accessToken");
             const res = await axios.post(
-                `http://localhost:8000/api/v1/users/update-account-details`,
+                `${import.meta.env.VITE_BACKEND_URL}/users/update-account-details`,
                 formData,
                 {
                     headers: {

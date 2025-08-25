@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { VideoCard } from "../index.js";
 
 function Home() {
@@ -9,7 +9,7 @@ function Home() {
             try {
                 const token = localStorage.getItem("accessToken");
                 const response = await axios.get(
-                    "http://localhost:8000/api/v1/videos",
+                    `${import.meta.env.VITE_BACKEND_URL}/videos`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -17,7 +17,7 @@ function Home() {
                         withCredentials: true,
                     }
                 );
-                console.log(response.data.data.data);
+                // console.log(response.data.data.data);
                 setVideos(response.data.data.data);
             } catch (error) {
                 console.error("Videos Fetching error :: ", error.message);

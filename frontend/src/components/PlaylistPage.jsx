@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 
@@ -18,7 +18,7 @@ const PlaylistPage = () => {
             try {
                 const token = localStorage.getItem("accessToken");
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/playlist/${playlistId}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/playlist/${playlistId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ const PlaylistPage = () => {
         try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.patch(
-                `http://localhost:8000/api/v1/playlist/remove/${videoId}/${playlistId}`,
+                `${import.meta.env.VITE_BACKEND_URL}/playlist/remove/${videoId}/${playlistId}`,
                 { playlistId, videoId },
                 {
                     headers: {

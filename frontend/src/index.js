@@ -14,6 +14,10 @@ import VideoCard from "./Cards/VideoCard";
 import PlaylistCard from "./Cards/PlaylistCard";
 import WatchHistory from "./components/WatchHistory";
 import PlaylistPage from "./components/PlaylistPage";
+import PlayVideoPage from "./components/PlayVideoPage";
+import EditChannel from "./components/EditChannel";
+import YourChannel from "./components/YourChannel";
+import ChannelDashboard from "./components/ChannelDashboard";
 
 export {
     Layout,
@@ -32,4 +36,8 @@ export {
     PlaylistCard,
     WatchHistory,
     PlaylistPage,
+    PlayVideoPage,
+    EditChannel,
+    YourChannel,
+    ChannelDashboard,
 };

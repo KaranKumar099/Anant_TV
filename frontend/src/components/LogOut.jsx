@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { useAuth } from "../Context/AuthContext";
@@ -10,7 +9,7 @@ function LogOut() {
         try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.post(
-                "http://localhost:8000/api/v1/users/logout",
+                `${import.meta.env.VITE_BACKEND_URL}/users/logout`,
                 {},
                 {
                     headers: {

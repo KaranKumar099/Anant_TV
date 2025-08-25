@@ -13,7 +13,7 @@ function Subscriptions() {
             try {
                 const token = localStorage.getItem("accessToken");
                 const res = await axios.get(
-                    `http://localhost:8000/api/v1/subscriptions/u/${user._id}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/subscriptions/u/${user._id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -21,7 +21,7 @@ function Subscriptions() {
                         withCredentials: true,
                     }
                 );
-                console.log("subscriptions : ", res.data);
+                // console.log("subscriptions : ", res.data);
                 setSubscriptions(res.data.data);
             } catch (err) {
                 console.error("Error fetching subscriptions:", err);

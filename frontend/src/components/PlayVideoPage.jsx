@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 
@@ -10,7 +10,7 @@ function PlayVideoPage() {
             try {
                 const token = localStorage.getItem("accessToken");
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/videos/${videoId}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/videos/${videoId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -23,7 +23,7 @@ function PlayVideoPage() {
 
                 // increment views after fetching
                 await axios.post(
-                    `http://localhost:8000/api/v1/videos/${videoId}/view`,
+                    `${import.meta.env.VITE_BACKEND_URL}/videos/${videoId}/view`,
                     {},
                     {
                         headers: {
@@ -35,7 +35,7 @@ function PlayVideoPage() {
 
                 // add video to history
                 await axios.post(
-                    `http://localhost:8000/api/v1/watch-history/add`,
+                    `${import.meta.env.VITE_BACKEND_URL}/watch-history/add`,
                     { videoId },
                     {
                         headers: {
@@ -55,7 +55,7 @@ function PlayVideoPage() {
     //     const incrementViews = async () => {
     //       try {
     //           const token=localStorage.getItem("accessToken")
-    //           const response= await axios.post(`http://localhost:8000/api/v1/videos/${videoId}/view`,
+    //           const response= await axios.post(`${import.meta.env.VITE_BACKEND_URL}/videos/${videoId}/view`,
     //             {videoId},
     //             {
     //                 headers:{
@@ -74,7 +74,7 @@ function PlayVideoPage() {
     //     const addVideoToHistory = async () => {
     //         try {
     //           const token=localStorage.getItem("accessToken")
-    //           const response= await axios.post(`http://localhost:8000/api/v1/watch-history/add`,
+    //           const response= await axios.post(`${import.meta.env.VITE_BACKEND_URL}/watch-history/add`,
     //             {videoId},
     //             {
     //                 headers:{

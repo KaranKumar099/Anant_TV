@@ -1,5 +1,4 @@
 import axios from "axios";
-import React from "react";
 import { useState } from "react";
 
 function Register() {
@@ -25,7 +24,7 @@ function Register() {
             if (coverImage) data.append("coverImage", coverImage);
 
             const res = await axios.post(
-                "http://localhost:8000/api/v1/users/register",
+                `${import.meta.env.VITE_BACKEND_URL}/users/register`,
                 data
             );
             // console.log(res.data)

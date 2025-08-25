@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { VideoCard } from "../index";
 import { useAuth } from "../Context/AuthContext";
@@ -11,9 +11,8 @@ function YourVideos() {
         const fetchVideos = async () => {
             try {
                 const token = localStorage.getItem("accessToken");
-                const id = user._id;
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/videos?userId=${id}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/videos?userId=${user?._id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -21,7 +20,7 @@ function YourVideos() {
                         withCredentials: true,
                     }
                 );
-                console.log(response.data.data.data);
+                // console.log(response.data.data.data);
                 setVideos(response.data.data.data);
             } catch (error) {
                 console.error("Videos Fetching error :: ", error.message);

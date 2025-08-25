@@ -18,11 +18,11 @@ import {
     CreatePlaylist,
     EditPlaylist,
     WatchHistory,
+    PlayVideoPage,
+    EditChannel,
+    YourChannel,
+    ChannelDashboard
 } from "./index.js";
-import PlayVideoPage from "./components/PlayVideoPage.jsx";
-import EditChannel from "./components/EditChannel.jsx";
-import YourChannel from "./components/YourChannel.jsx";
-import ChannelDashboard from "./components/ChannelDashboard.jsx";
 
 const router = createBrowserRouter([
     {

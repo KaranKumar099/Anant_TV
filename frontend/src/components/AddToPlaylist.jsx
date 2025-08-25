@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
 import axios from "axios";
 
@@ -12,7 +12,7 @@ function AddToPlaylist({ videoId }) {
             try {
                 const token = localStorage.getItem("accessToken");
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/playlist/user/${userId}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/playlist/user/${userId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -20,7 +20,7 @@ function AddToPlaylist({ videoId }) {
                         withCredentials: true,
                     }
                 );
-                console.log(response.data.data);
+                // console.log(response.data.data);
                 setPlaylists(response.data.data);
             } catch (error) {
                 console.error("Playlists Fetching error :: ", error.message);
@@ -43,7 +43,7 @@ function AddToPlaylist({ videoId }) {
         try {
             const token = localStorage.getItem("accessToken");
             const res = await axios.patch(
-                `http://localhost:8000/api/v1/playlist/add/${videoId}/${playlistId}`,
+                `${import.meta.env.VITE_BACKEND_URL}/playlist/add/${videoId}/${playlistId}`,
                 { videoId, playlistId },
                 {
                     headers: {

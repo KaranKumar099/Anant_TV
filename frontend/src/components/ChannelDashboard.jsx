@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router";
 import axios from "axios";
-import VideoCard from "../Cards/VideoCard";
+import {VideoCard} from "../index";
 
 function ChannelDashboard() {
     const { username } = useParams();
@@ -15,7 +15,7 @@ function ChannelDashboard() {
             try {
                 const token = localStorage.getItem("accessToken");
                 const res = await axios.get(
-                    `http://localhost:8000/api/v1/users/c/${username}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/users/c/${username}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -38,7 +38,7 @@ function ChannelDashboard() {
                 if (!channelDets?._id) return;
                 const token = localStorage.getItem("accessToken");
                 const res = await axios.get(
-                    `http://localhost:8000/api/v1/videos?userId=${channelDets._id}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/videos?userId=${channelDets._id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ function ChannelDashboard() {
                 const token = localStorage.getItem("accessToken");
                 console.log(user?.data?._id);
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/playlist/user/${channelDets._id}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/playlist/user/${channelDets._id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

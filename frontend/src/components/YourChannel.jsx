@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext";
-import VideoCard from "../Cards/VideoCard";
-import PlaylistCard from "../Cards/PlaylistCard";
+import { VideoCard, PlaylistCard } from "../index"
 
 function YourChannel() {
     const { id } = useParams();
@@ -18,7 +17,7 @@ function YourChannel() {
         const fetchChannelDets = async () => {
             try {
                 const stats = await axios.get(
-                    `http://localhost:8000/api/v1/dashboard/${id}/stats`,
+                    `${import.meta.env.VITE_BACKEND_URL}/dashboard/${id}/stats`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -37,7 +36,7 @@ function YourChannel() {
         const fetchVideos = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/videos?userId=${id}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/videos?userId=${id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -56,9 +55,9 @@ function YourChannel() {
         const fetchPlaylists = async () => {
             try {
                 const token = localStorage.getItem("accessToken");
-                console.log(user?.data?._id);
+                // console.log(user?.data?._id);
                 const response = await axios.get(
-                    `http://localhost:8000/api/v1/playlist/user/${id}`,
+                    `${import.meta.env.VITE_BACKEND_URL}/playlist/user/${id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -89,7 +88,7 @@ function YourChannel() {
         formData.append(fileName, file);
 
         try {
-            let addressRoute = "http://localhost:8000/api/v1/users/";
+            let addressRoute = `${import.meta.env.VITE_BACKEND_URL}/users/`;
             if (fileName === "avatar") {
                 addressRoute += "update-avatar";
             } else {

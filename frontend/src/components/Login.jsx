@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +30,7 @@ function Login() {
 
             // axios method
             const res = await axios.post(
-                "http://localhost:8000/api/v1/users/login",
+                "https://anant-tv.onrender.com/api/v1/users/login",
                 { username, password }
             );
             console.log("Login Success:", res.data);
