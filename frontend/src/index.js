@@ -18,6 +18,8 @@ import PlayVideoPage from "./components/PlayVideoPage";
 import EditChannel from "./components/EditChannel";
 import YourChannel from "./components/YourChannel";
 import ChannelDashboard from "./components/ChannelDashboard";
+import Header from "./components/Header";
+import SideBar from "./components/SideBar";
 
 export {
     Layout,
@@ -40,4 +42,6 @@ export {
     EditChannel,
     YourChannel,
     ChannelDashboard,
+    Header,
+    SideBar
 };
