@@ -1,59 +1,38 @@
-import "remixicon/fonts/remixicon.css";
-import { NavLink } from "react-router-dom";
-import LogOut from "./LogOut";
-import { useAuth } from "../Context/AuthContext";
+import { motion } from "framer-motion";
 
 function Header() {
-    const { isAuthenticated, user } = useAuth();
     return (
-        <>
-            <header className="bg-gray-500 w-full flex justify-between items-center h-16 px-6">
-                <div className="flex justify-between items-center gap-10">
-                    <div>
-                        <i className="ri-menu-line text-2xl"></i>
-                    </div>
-                    <div className="text-2xl font-bold h-8 flex items-center">
-                        Anant
-                        <span className="bg-blue-400 p-1 rounded-lg text-white">
-                            TV
-                        </span>
-                    </div>
-                </div>
-                <ul className="flex justify-between items-center gap-10">
-                    {isAuthenticated && user ? (
-                        <LogOut />
-                    ) : (
-                        <>
-                            <li>
-                                <NavLink
-                                    to="/register"
-                                    className="bg-blue-400 border-1 py-2 px-4 hover:rounded-full"
-                                >
-                                    SignUp
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    to="/login"
-                                    className="bg-blue-400 border-1 py-2 px-3 hover:rounded-full"
-                                >
-                                    <i className="mr-2 ri-login-box-line"></i>
-                                    Login
-                                </NavLink>
-                            </li>
-                        </>
-                    )}
-                    <li>
-                        <NavLink
-                            to="/user"
-                            className="bg-blue-400 border-1 py-2 px-3 hover:rounded-full"
-                        >
-                            <i className="ri-user-6-line"></i>
-                        </NavLink>
-                    </li>
-                </ul>
-            </header>
-        </>
+        <motion.header
+            initial={{ y: -60, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="sticky top-0 z-10 mb-6 flex items-center justify-between p-4 bg-gradient-to-r bg-gray-900 backdrop-blur-xl border border-white/10 shadow-lg"
+        >
+            <motion.h1
+                whileHover={{ scale: 1.05 }}
+                className="text-2xl font-bold tracking-wide text-indigo-400"
+            >
+                AnantTV
+            </motion.h1>
+
+            <motion.input
+                whileFocus={{ scale: 1.02 }}
+                type="text"
+                placeholder="Search videos..."
+                className="px-4 py-2 w-1/3 rounded-xl bg-white/10 border border-white/20 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            />
+
+            <div className="flex items-center gap-5 text-gray-300">
+                <motion.i
+                    whileHover={{ scale: 1.2, color: "#818cf8" }}
+                    className="ri-notification-3-line text-xl cursor-pointer transition"
+                />
+                <motion.i
+                    whileHover={{ scale: 1.2, color: "#818cf8" }}
+                    className="ri-user-3-line text-xl cursor-pointer transition"
+                />
+            </div>
+        </motion.header>
     );
 }
 
