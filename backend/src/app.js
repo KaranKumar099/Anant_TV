@@ -8,7 +8,6 @@ const allowedOrigin= ["http://localhost:5173", process.env.CORS_ORIGIN]
 app.use(
     cors({
         origin: function(origin, callback){
-            console.log("Origin received:", origin);
             if(!origin || allowedOrigin.includes(origin)){
                 callback(null, true)
             } else {

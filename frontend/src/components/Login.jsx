@@ -29,15 +29,22 @@ function Login() {
             // console.log("Login Success:", data);
 
             // axios method
+            const token = localStorage.getItem("accessToken")
             const res = await axios.post(
-                "https://anant-tv.onrender.com/api/v1/users/login",
-                { username, password }
+                `${import.meta.env.VITE_BACKEND_URL}/users/login`,
+                { username, password },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    withCredentials: true,
+                }
             );
             console.log("Login Success:", res.data);
 
             localStorage.setItem("accessToken", res.data.data.accessToken);
             localStorage.setItem("refreshToken", res.data.data.refreshToken);
-            login();
+            login(res.data.data.accessToken);
             // console.log("stored token ",localStorage.getItem("accessToken"));
             // console.log("stored token ",localStorage.getItem("refreshToken"));
             navigate("/");

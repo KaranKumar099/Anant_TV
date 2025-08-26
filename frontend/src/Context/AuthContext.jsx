@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
         try {
             // console.log("token : ",token)
             const response = await axios.get(
-                "http://localhost:8000/api/v1/users/get-user",
+                `${import.meta.env.VITE_BACKEND_URL}/users/get-user`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
