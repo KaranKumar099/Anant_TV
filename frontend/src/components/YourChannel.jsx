@@ -109,7 +109,7 @@ function YourChannel() {
     };
 
     return (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col min-h-screen w-full bg-gray-900">
             {user && channelDets ? (
                 <>
                     <div className="relative w-full h-56 p-4 pb-0 overflow-hidden group">
@@ -138,72 +138,43 @@ function YourChannel() {
                     </div>
 
                     <div className="flex flex-col md:flex-row items-start md:items-center p-4 gap-4">
-                        <div className="w-40 h-40 relative group">
-                            <img
-                                src={user?.avatar}
-                                alt="Profile"
-                                className="w-full h-full object-cover rounded-full border border-gray-300 group-hover:opacity-25"
-                            />
-                            <p className="absolute top-1/2 left-1/2 text-center -translate-1/2 opacity-0 group-hover:opacity-100">
-                                <label
-                                    htmlFor="avatar"
-                                    className="cursor-pointer"
-                                >
-                                    <i className="ri-camera-line text-2xl"></i>
-                                    <br></br>
-                                    Click to Change
-                                </label>
-                                <input
-                                    type="file"
-                                    name="avatar"
-                                    id="avatar"
-                                    onChange={handleChangeImages}
-                                    className="hidden"
-                                />
-                            </p>
+                        <div className="w-40 h-40 relative group flex-shrink-0">
+                        <img
+                            src={user?.avatar}
+                            alt="Profile"
+                            className="w-full h-full object-cover rounded-full border-4 border-white shadow-md transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <label
+                            htmlFor="avatar"
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer text-white opacity-0 group-hover:opacity-100 text-center transition-opacity duration-300"
+                        >
+                            <i className="ri-camera-line text-2xl"></i>
+                            <p className="text-xs mt-1">Change Avatar</p>
+                            <input type="file" name="avatar" id="avatar" onChange={handleChangeImages} className="hidden" />
+                        </label>
                         </div>
 
-                        <div className="flex-1">
-                            <h1 className="text-2xl font-bold">
-                                {user?.username}
-                            </h1>
-                            <p className="text-sm text-gray-500">
-                                @{user?.fullName}
-                            </p>
-                            <p className="mt-2 text-gray-700">
-                                description 2 to 3 line
-                            </p>
-                            <a
-                                href="#"
-                                className="text-blue-600 text-sm hover:underline"
-                            >
-                                More info link
-                            </a>
+                        <div className="flex-1 flex flex-col gap-1">
+                            <h1 className="text-3xl font-bold text-gray-200">{user?.username}</h1>
+                            <p className="text-gray-400">@{user?.fullName}</p>
+                            <p className="text-gray-600 line-clamp-3">Your channel description goes here, 2–3 lines max.</p>
+                            <a href="#" className="text-blue-600 text-sm hover:underline">More info</a>
                             <div className="flex gap-3 mt-3">
-                                <button className="px-4 py-2 bg-black text-white rounded-md cursor-pointer">
-                                    Subscribe
-                                </button>
-                                <button className="px-4 py-2 bg-gray-200 rounded-md cursor-pointer">
-                                    Join
-                                </button>
-                                <button
-                                    className="px-4 py-2 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300 transition-colors duration-500"
-                                    onClick={handleEditChannel}
-                                >
-                                    Edit
-                                </button>
+                                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">Subscribe</button>
+                                <button className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors">Join</button>
+                                <button onClick={handleEditChannel} className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors">Edit</button>
                             </div>
                         </div>
 
-                        <div className="flex-1 text-center bg-gray-300 py-10">
-                            <h1 className="text-6xl">
-                                {channelDets.subsCount}
-                            </h1>
-                            <p>Subscribers</p>
+                        <div className="flex gap-4 mt-4 md:mt-0">
+                        <div className="bg-gray-100 p-6 rounded-xl text-center shadow-md w-36">
+                            <h1 className="text-4xl font-bold">{channelDets.subsCount}</h1>
+                            <p className="text-gray-600">Subscribers</p>
                         </div>
-                        <div className="flex-1 text-center bg-gray-300 py-10">
-                            <h1 className="text-6xl">{channelDets.vdoCount}</h1>
-                            <p>Videos</p>
+                        <div className="bg-gray-100 p-6 rounded-xl text-center shadow-md w-36">
+                            <h1 className="text-4xl font-bold">{channelDets.vdoCount}</h1>
+                            <p className="text-gray-600">Videos</p>
+                        </div>
                         </div>
                     </div>
 
@@ -211,8 +182,8 @@ function YourChannel() {
                         <button
                             className={`px-4 py-2 text-sm font-medium ${
                                 current === "videos"
-                                    ? "text-black border-b-2 border-black"
-                                    : "text-gray-600 hover:text-black"
+                                    ? "text-blue-600 border-b-2 border-black"
+                                    : "text-gray-600 hover:text-white"
                             }`}
                             name="videos"
                             onClick={(e) => setCurrent(e.target.name)}
@@ -222,8 +193,8 @@ function YourChannel() {
                         <button
                             className={`px-4 py-2 text-sm font-medium ${
                                 current === "playlists"
-                                    ? "text-black border-b-2 border-black"
-                                    : "text-gray-600 hover:text-black"
+                                    ? "text-blue-600 border-b-2 border-black"
+                                    : "text-gray-600 hover:text-white"
                             }`}
                             name="playlists"
                             onClick={(e) => setCurrent(e.target.name)}
@@ -232,7 +203,7 @@ function YourChannel() {
                         </button>
                     </div>
 
-                    <div className="flex gap-x-4 gap-y-8 flex-wrap p-4">
+                    <div className="p-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {current === "videos"
                             ? videos?.map((item) => (
                                   <VideoCard
