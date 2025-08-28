@@ -30,7 +30,8 @@ function LogOut() {
     };
     return (
         <button
-            className="bg-blue-400 border-1 py-2 px-3 hover:rounded-full"
+            className="px-5 py-2 rounded-xl bg-red-600 text-white font-semibold shadow-md hover:bg-red-500 hover:shadow-lg 
+            active:bg-red-700 active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-400"
             onClick={logOutHandler}
         >
             <i className="mr-2 ri-logout-box-r-line"></i>LogOut

@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { motion } from "framer-motion";
 
-function SideBar() {
+function SideBar({showLabels}) {
     const { user } = useAuth();
 
     const linkClasses = ({ isActive }) =>
@@ -23,13 +23,13 @@ function SideBar() {
             initial={{ x: -80, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col items-center gap-3 bg-gray-900 py-4 shadow-xl h-full"
+            className="flex flex-col items-center gap-3 bg-gray-900 py-8 px-3 shadow-xl h-full"
         >
             {links.map(({ to, label, icon }) => (
                 <motion.div key={label} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full flex justify-center">
                     <NavLink to={to} className={linkClasses}>
                         <i className={`text-xl ${icon}`}></i>
-                        <span>{label}</span>
+                        {showLabels && <span>{label}</span>}
                     </NavLink>
                 </motion.div>
             ))}
