@@ -20,6 +20,7 @@ import YourChannel from "./components/YourChannel";
 import ChannelDashboard from "./components/ChannelDashboard";
 import Header from "./components/Header";
 import SideBar from "./components/SideBar";
+import LogOut from "./components/LogOut";
 
 export {
     Layout,
@@ -43,5 +44,6 @@ export {
     YourChannel,
     ChannelDashboard,
     Header,
-    SideBar
+    SideBar,
+    LogOut
 };
