@@ -32,37 +32,43 @@ function CreatePlaylist() {
     };
 
     return (
-        <div className="h-full w-full flex-1 flex flex-col items-center">
-            <h1 className="text-2xl font-bold my-5">Create Playlist</h1>
-            <form className="flex flex-col gap-4" onSubmit={handleFormSubmit}>
+        <div className="flex-1 w-full h-full flex flex-col items-center justify-center bg-gray-900 text-white px-4">
+            <h1 className="text-3xl font-bold mb-6 text-blue-400">Create Playlist</h1>
+            
+            <form 
+                className="bg-gray-800 p-6 rounded-xl shadow-lg w-full max-w-md flex flex-col gap-5"
+                onSubmit={handleFormSubmit}
+            >
                 <div>
-                    <label>Name</label>
-                    <br />
+                    <label className="block text-gray-300 font-medium">Name</label>
                     <input
                         name="name"
                         type="text"
                         required
                         value={playlistDets.name}
                         onChange={handleChange}
-                        className="py-1 px-2 w-md outline mt-1"
+                        className="mt-2 w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        placeholder="Enter playlist name"
                     />
                 </div>
+
                 <div>
-                    <label>Description</label>
-                    <br />
+                    <label className="block text-gray-300 font-medium">Description</label>
                     <textarea
                         name="description"
                         rows="4"
                         value={playlistDets.description}
                         onChange={handleChange}
-                        className="py-1 px-2 w-md outline mt-1"
+                        className="mt-2 w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        placeholder="Enter playlist description"
                     ></textarea>
                 </div>
+
                 <button
                     type="submit"
-                    className="p-2 cursor-pointer text-white px-4 py-2 rounded bg-blue-500 transition"
+                    className="w-full py-3 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors font-semibold shadow-md"
                 >
-                    Create
+                    Create Playlist
                 </button>
             </form>
         </div>

@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import {useAuth} from "../Context/AuthContext"
 
-function Header() {
+function Header({onMenuClick}) {
     const navigate= useNavigate()
-    const { isAuthenticated } = useAuth()
+    const { user } = useAuth()
     async function handleClickOnUser(){
         navigate("/user")
     }
@@ -17,8 +17,12 @@ function Header() {
             initial={{ y: -60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="sticky top-0 z-10 mb-6 flex items-center justify-around p-4 bg-gradient-to-r bg-gray-900 backdrop-blur-xl border border-white/10 shadow-lg"
+            className="sticky top-0 z-10 mb-6 flex items-center justify-between pl-20 p-4 bg-gradient-to-r bg-gray-900 backdrop-blur-xl border border-white/10 shadow-lg"
         >
+            <button onClick={onMenuClick} 
+                className="absolute top-3 left-5 text-xl text-gray-200 p-2 rounded-lg hover:bg-gray-700">
+                <i className="ri-menu-2-line"></i>
+            </button>
             <motion.h1
                 whileHover={{ scale: 1.05 }}
                 className="text-2xl font-bold tracking-wide text-indigo-400"
@@ -35,7 +39,7 @@ function Header() {
             />
 
             {
-                !isAuthenticated ? (<button
+                !user ? (<button
                             className="text-gray-200 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm hover:cursor-pointer
                             focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                             onClick={navigateToRegister}
