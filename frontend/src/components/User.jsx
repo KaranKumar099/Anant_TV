@@ -3,6 +3,7 @@ import { LogOut } from "../index"
 
 function User() {
     const { user } = useAuth();
+    console.log(user)
     return (
         <>
             {user ? (

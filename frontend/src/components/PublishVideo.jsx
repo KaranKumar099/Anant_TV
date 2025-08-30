@@ -7,10 +7,19 @@ function PublishVideo() {
         thumbnail: "No File Chosen",
         videoFile: "No File Chosen",
     });
+
+    const [vdoDets, setVdoDets] = useState({
+        title: "",
+        description: "",
+        thumbnail: File,
+        videoFile: File,
+    });
+
     const handleVideoFileUpload = (e) => {
         setFileNames({ ...fileNames, videoFile: e.target.files[0].name });
         setVdoDets({ ...vdoDets, videoFile: e.target.files[0] });
     };
+
     const handleThumbnailUpload = (e) => {
         setFileNames({ ...fileNames, thumbnail: e.target.files[0].name });
         setVdoDets({ ...vdoDets, thumbnail: e.target.files[0] });
@@ -20,14 +29,8 @@ function PublishVideo() {
         setVdoDets({ ...vdoDets, [e.target.name]: e.target.value });
     };
 
-    const [vdoDets, setVdoDets] = useState({
-        title: "",
-        description: "",
-        thumbnail: File,
-        videoFile: File,
-    });
-
     const navigate = useNavigate();
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -51,35 +54,43 @@ function PublishVideo() {
     };
 
     return (
-        <div className="h-full w-full flex-1 flex flex-col items-center">
-            <h1 className="text-2xl font-bold my-5">Publish Video</h1>
-            <form className="flex flex-col gap-4" onSubmit={handleFormSubmit}>
-                <div>
-                    <label>Title</label>
-                    <br />
+        <div className="h-full w-full flex-1 flex flex-col items-center bg-gray-900 text-white py-8 px-6">
+            <h1 className="text-3xl font-bold mb-6 text-blue-400">
+                Publish Video
+            </h1>
+            <form
+                className="flex flex-col gap-6 bg-gray-800 p-6 rounded-2xl shadow-lg w-full max-w-lg"
+                onSubmit={handleFormSubmit}
+            >
+                {/* Title */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-medium">Title</label>
                     <input
                         name="title"
                         type="text"
                         required
                         value={vdoDets.title}
                         onChange={handleTextChange}
-                        className="py-1 px-2 w-md outline mt-1"
+                        className="py-2 px-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
-                <div>
-                    <label>Description</label>
-                    <br />
+
+                {/* Description */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-medium">Description</label>
                     <textarea
                         name="description"
                         rows="4"
                         value={vdoDets.description}
                         onChange={handleTextChange}
-                        className="py-1 px-2 w-md outline mt-1"
+                        className="py-2 px-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     ></textarea>
                 </div>
-                <div className="my-2">
-                    <h2>Thumbnail</h2>
-                    <div className="mt-1 flex justify-between items-center">
+
+                {/* Thumbnail Upload */}
+                <div>
+                    <h2 className="font-medium mb-2">Thumbnail</h2>
+                    <div className="flex justify-between items-center gap-4">
                         <input
                             name="thumbnail"
                             id="thumbnail"
@@ -89,16 +100,20 @@ function PublishVideo() {
                         />
                         <label
                             htmlFor="thumbnail"
-                            className="p-2 bg-gray-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                            className="cursor-pointer bg-blue-600 hover:bg-blue-700 transition px-4 py-2 rounded-lg text-white font-medium"
                         >
                             Choose File
                         </label>
-                        <p>{fileNames.thumbnail}</p>
+                        <p className="text-sm text-gray-400 truncate">
+                            {fileNames.thumbnail}
+                        </p>
                     </div>
                 </div>
+
+                {/* Video File Upload */}
                 <div>
-                    <h2>Video File</h2>
-                    <div className="mt-1 flex justify-between items-center">
+                    <h2 className="font-medium mb-2">Video File</h2>
+                    <div className="flex justify-between items-center gap-4">
                         <input
                             name="videoFile"
                             id="videoFile"
@@ -109,16 +124,20 @@ function PublishVideo() {
                         />
                         <label
                             htmlFor="videoFile"
-                            className="p-2 bg-gray-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                            className="cursor-pointer bg-blue-600 hover:bg-blue-700 transition px-4 py-2 rounded-lg text-white font-medium"
                         >
                             Choose File
                         </label>
-                        <p>{fileNames.videoFile}</p>
+                        <p className="text-sm text-gray-400 truncate">
+                            {fileNames.videoFile}
+                        </p>
                     </div>
                 </div>
+
+                {/* Submit Button */}
                 <button
                     type="submit"
-                    className="p-2 cursor-pointer text-white px-4 py-2 rounded bg-blue-500 transition"
+                    className="mt-4 w-full py-2 rounded-lg bg-green-600 hover:bg-green-700 transition font-semibold"
                 >
                     Publish
                 </button>
