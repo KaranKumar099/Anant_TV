@@ -44,7 +44,7 @@ function Subscriptions() {
                 Subscriptions
             </motion.h1>
 
-            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {subscriptions.map((channel) => (
                     <motion.div
                         key={channel.channel._id}
@@ -55,7 +55,7 @@ function Subscriptions() {
                         <img
                             src={channel.channel.avatar}
                             alt={channel.channel.username}
-                            className="w-24 h-24 rounded-full shadow-md"
+                            className="w-26 h-26 rounded-full shadow-md"
                         />
                         <h2 className="text-lg font-semibold text-center mt-3">
                             {channel.channel.username}

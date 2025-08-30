@@ -1,12 +1,34 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
+import { useAuth } from "../Context/AuthContext";
 
 function PlayVideoPage() {
     const { videoId } = useParams();
     const [video, setVideo] = useState(null);
+    const [subscriptions, setSubscriptions] = useState([]);
+    const [likedVideos, setLikedVideos] = useState([]);
+    const {user} = useAuth()
 
     useEffect(() => {
+        const fetchSubscriptions = async () => {
+            if (!user?._id) return;
+            try {
+                const token = localStorage.getItem("accessToken");
+                const res = await axios.get(
+                    `${import.meta.env.VITE_BACKEND_URL}/subscriptions/u/${user._id}`,
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                        withCredentials: true,
+                    }
+                );
+                setSubscriptions(res.data.data);
+                console.log("subscriptions", res.data.data)
+            } catch (err) {
+                console.error("Error fetching subscriptions:", err);
+            }
+        }
+        
         const fetchVideo = async () => {
             try {
                 const token = localStorage.getItem("accessToken");
@@ -19,8 +41,9 @@ function PlayVideoPage() {
                         withCredentials: true,
                     }
                 );
+                console.log("video : ", response.data.data)
                 setVideo(response.data.data);
-
+                
                 // increment views
                 await axios.post(
                     `${import.meta.env.VITE_BACKEND_URL}/videos/${videoId}/view`,
@@ -38,8 +61,126 @@ function PlayVideoPage() {
                 console.error("Videos Fetching error :: ", error.message);
             }
         };
+
+        const fetchLikedVideos = async ()=>{
+            if (!user?._id) return;
+            try {
+                const token = localStorage.getItem("accessToken");
+                const res = await axios.get(
+                    `${import.meta.env.VITE_BACKEND_URL}/likes/videos`,
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                        withCredentials: true,
+                    }
+                );
+                setLikedVideos(res.data.data);
+                console.log("liked videos", res.data.data)
+            } catch (err) {
+                console.error("Error fetching liked videos:", err);
+            }
+        }
+
         fetchVideo();
-    }, [videoId]);
+        fetchSubscriptions();
+        fetchLikedVideos();
+    }, [videoId, user]);
+
+    const [isSubscribed, setIsSubscribed] = useState(false);
+    useEffect(() => {
+        const checkSubscription = () => {
+            if (!video?.owner?._id || !subscriptions) return;
+
+            const subscribed = subscriptions.some(
+                (item) => item.channel._id === video.owner._id
+            );
+
+            setIsSubscribed(subscribed);
+            console.log("Subscribed? ", subscribed);
+        };
+
+        checkSubscription();
+    }, [video, subscriptions]);
+
+    const [subsCount, setSubsCount]= useState(null)
+    useEffect(()=>{
+        if(!video) return; 
+        const fetchSubsCount= async ()=>{
+            try {
+                const token=localStorage.getItem("accessToken")
+                const res= await axios.get(
+                    `${import.meta.env.VITE_BACKEND_URL}/subscriptions/c/${video?.owner._id}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setSubsCount(res.data.data.length)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        fetchSubsCount()
+    },[video])
+
+    const toggleSubscription= async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            const res = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/subscriptions/c/${video?.owner._id}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
+            )
+            console.log(res.data)
+            setIsSubscribed((prev) => !prev);
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const [isLiked, setIsLiked]= useState(null)
+    useEffect(() => {
+        const checkLikedVideos = () => {
+            if (!video || likedVideos.length==0) return;
+
+            const liked = likedVideos.some(
+                (item) => item.likedBy === video._id
+            );
+
+            setIsLiked(liked);
+            console.log("liked? ", liked);
+        };
+        checkLikedVideos();
+    }, [video, likedVideos]);
+
+    const [likesCount, setLikesCount]= useState(null)
+    useEffect(()=>{
+        if(!video) return; 
+        const fetchLikesCount= async ()=>{
+            try {
+                const token=localStorage.getItem("accessToken")
+                const res= await axios.get(
+                    `${import.meta.env.VITE_BACKEND_URL}/likes/videos/${videoId}/likesCount`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setLikesCount(res.data.data)
+            } catch (error) {
+                console.error("video likes count fetching error ",error)
+            }
+        }
+        fetchLikesCount()
+    },[video])
+
+    const toggleLike= async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            const res = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/likes/toggle/v/${videoId}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
+            )
+            console.log(res.data)
+            setIsLiked((prev) => !prev);
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     const suggestedVideos = [
         {
@@ -76,16 +217,20 @@ function PlayVideoPage() {
                         />
                         <div>
                             <h2 className="font-semibold">{video?.owner.username}</h2>
-                            <p className="text-gray-400 text-sm">3.79M subscribers</p>
+                            <p className="text-gray-400 text-sm">{subsCount} subscribers</p>
                         </div>
-                        <button className="ml-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-full font-semibold text-white">
-                            Subscribe
-                        </button>
+                            <button onClick={toggleSubscription}
+                                className={`px-4 py-2 rounded-md transition-colors ${
+                                    isSubscribed
+                                    ? "bg-gray-300/10 text-gray-200 hover:bg-gray-400"
+                                    : "bg-red-600 text-white hover:bg-red-700"
+                                }`}>{isSubscribed ? "Subscribed" : "Subscribe"}
+                            </button>
                     </div>
 
                     <div className="flex gap-3">
-                        <button className="px-4 py-2 bg-[#272727] hover:bg-[#3d3d3d] rounded-full">
-                            <i className="ri-thumb-up-line"></i> 157K
+                        <button className="px-4 py-2 bg-[#272727] hover:bg-[#3d3d3d] rounded-full" onClick={toggleLike}>
+                            <i className={isLiked ? "ri-heart-3-fill pr-2" : "ri-heart-3-line pr-2"}></i>{likesCount}
                         </button>
                         <button className="px-4 py-2 bg-[#272727] hover:bg-[#3d3d3d] rounded-full">
                             Share

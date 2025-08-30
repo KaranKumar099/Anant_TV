@@ -1,6 +1,4 @@
-import mongoose, { isValidObjectId } from "mongoose";
 import { Like } from "../models/like.model.js";
-import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 
@@ -92,4 +90,12 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         );
 });
 
-export { toggleCommentLike, toggleVideoLike, getLikedVideos };
+const getVideoLikes = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+    const likesCount = await Like.countDocuments({ video: videoId });
+    return res.status(200).json(
+        new ApiResponse(201, likesCount, "likes count fetched successfully")
+    );
+})
+
+export { toggleCommentLike, toggleVideoLike, getLikedVideos, getVideoLikes };

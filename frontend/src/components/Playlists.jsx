@@ -34,7 +34,7 @@ function Playlists() {
     };
 
     return (
-        <div className="relative p-6 min-h-screen w-full flex flex-col bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
+        <div className="relative p-6 min-h-[92vh] w-full flex flex-col bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white">
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import {VideoCard} from "../index";
+import { VideoCard, PlaylistCard } from "../index";
 
 function ChannelDashboard() {
     const { username } = useParams();
@@ -9,6 +9,7 @@ function ChannelDashboard() {
     const [videos, setVideos] = useState(null);
     const [playlists, setPlaylists] = useState(null);
     const [current, setCurrent] = useState("videos");
+    const [isSubscribed, setIsSubscribed] = useState(false);
 
     useEffect(() => {
         const fetchChannelDets = async () => {
@@ -16,15 +17,10 @@ function ChannelDashboard() {
                 const token = localStorage.getItem("accessToken");
                 const res = await axios.get(
                     `${import.meta.env.VITE_BACKEND_URL}/users/c/${username}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                        withCredentials: true,
-                    }
+                    { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
                 );
-                console.log(res.data.data);
                 setChannelDets(res.data.data);
+                setIsSubscribed(res.data.data.isSubscribed)
             } catch (error) {
                 console.log(error);
             }
@@ -39,90 +35,94 @@ function ChannelDashboard() {
                 const token = localStorage.getItem("accessToken");
                 const res = await axios.get(
                     `${import.meta.env.VITE_BACKEND_URL}/videos?userId=${channelDets._id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                        withCredentials: true,
-                    }
+                    { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
                 );
-                console.log(res.data.data.data);
                 setVideos(res.data.data.data);
             } catch (error) {
                 console.error("Videos Fetching error :: ", error.message);
             }
         };
-        fetchVideos();
 
         const fetchPlaylists = async () => {
             try {
+                if (!channelDets?._id) return;
                 const token = localStorage.getItem("accessToken");
-                console.log(user?.data?._id);
                 const response = await axios.get(
                     `${import.meta.env.VITE_BACKEND_URL}/playlist/user/${channelDets._id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                        withCredentials: true,
-                    }
+                    { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
                 );
-                // console.log("playlists : ",response.data.data)
                 setPlaylists(response.data.data);
             } catch (error) {
                 console.error("Playlists Fetching error :: ", error.message);
             }
         };
+
+        fetchVideos();
         fetchPlaylists();
     }, [channelDets]);
 
+    const toggleSubscription= async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            const res = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/subscriptions/c/${channelDets?._id}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
+            )
+            console.log(res.data)
+            setIsSubscribed((prev) => !prev);
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col min-h-screen w-full bg-gray-900">
             {channelDets ? (
                 <>
-                    <div className="w-full h-56 p-4 pb-0 overflow-hidden">
+                    <div className="relative w-full h-56 p-4 pb-0 overflow-hidden group">
                         <img
-                            src={channelDets?.coverImage}
-                            alt="Channel Banner"
-                            className="w-full h-[95%] object-cover rounded-xl"
+                            src={channelDets?.coverImage || null}
+                            alt="No Channel Cover Image"
+                            className="w-full h-[95%] object-cover rounded-xl group-hover:opacity-50"
                         />
                     </div>
 
                     <div className="flex flex-col md:flex-row items-start md:items-center p-4 gap-4">
-                        <div className="w-40 h-40">
-                            <img
-                                src={channelDets?.avatar}
-                                alt="Profile"
-                                className="w-full h-full object-cover rounded-full border border-gray-300"
+                        <div className="w-40 h-40 relative group flex-shrink-0">
+                            <img src={channelDets?.avatar} alt="Profile"
+                                className="w-full h-full object-cover rounded-full border-4 border-white shadow-md
+                                transition-transform duration-300 group-hover:scale-105"
                             />
                         </div>
 
-                        <div className="flex-1">
-                            <h1 className="text-2xl font-bold">
-                                {channelDets?.username}
-                            </h1>
-                            <p className="text-sm text-gray-500">
-                                @{channelDets?.fullName} •{" "}
-                                {channelDets?.subscribersCount} subscribers •{" "}
-                                {videos?.length} videos
-                            </p>
-                            <p className="mt-2 text-gray-700">
-                                description 2 to 3 line
-                            </p>
-                            <a
-                                href="#"
-                                className="text-blue-600 text-sm hover:underline"
-                            >
-                                More info link
-                            </a>
+                        <div className="flex-1 flex flex-col gap-1">
+                            <h1 className="text-3xl font-bold text-gray-200">{channelDets?.username}</h1>
+                            <p className="text-gray-400">@{channelDets?.fullName}</p>
+                            <p className="text-gray-600 line-clamp-3">Your channel description goes here, 2–3 lines max.</p>
+                            <a href="#" className="text-blue-600 text-sm hover:underline">More info</a>
                             <div className="flex gap-3 mt-3">
-                                <button className="px-4 py-2 bg-black text-white rounded-md cursor-pointer">
-                                    Subscribe
+                                <button onClick={toggleSubscription}
+                                className={`px-4 py-2 rounded-md transition-colors ${
+                                    isSubscribed
+                                    ? "bg-gray-300/10 text-gray-200 hover:bg-gray-400"
+                                    : "bg-blue-600 text-white hover:bg-blue-700"
+                                }`}>
+                                    {isSubscribed ? "Subscribed" : "Subscribe"}
                                 </button>
-                                <button className="px-4 py-2 bg-gray-200 rounded-md cursor-pointer">
-                                    Join
-                                </button>
+                                <button className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors">Join</button>
                             </div>
+                        </div>
+
+                        <div className="flex gap-4 mt-4 md:mt-0">
+                        <div className="bg-gray-100 p-6 rounded-xl text-center shadow-md w-36">
+                            <h1 className="text-4xl font-bold">{channelDets?.subscribersCount}</h1>
+                            <p className="text-gray-600">Subscribers</p>
+                        </div>
+                        <div className="bg-gray-100 p-6 rounded-xl text-center shadow-md w-36">
+                            <h1 className="text-4xl font-bold">{videos?.length}</h1>
+                            <p className="text-gray-600">Videos</p>
+                        </div>
                         </div>
                     </div>
 
@@ -130,8 +130,8 @@ function ChannelDashboard() {
                         <button
                             className={`px-4 py-2 text-sm font-medium ${
                                 current === "videos"
-                                    ? "text-black border-b-2 border-black"
-                                    : "text-gray-600 hover:text-black"
+                                    ? "text-blue-600 border-b-2 border-black"
+                                    : "text-gray-600 hover:text-white"
                             }`}
                             name="videos"
                             onClick={(e) => setCurrent(e.target.name)}
@@ -141,8 +141,8 @@ function ChannelDashboard() {
                         <button
                             className={`px-4 py-2 text-sm font-medium ${
                                 current === "playlists"
-                                    ? "text-black border-b-2 border-black"
-                                    : "text-gray-600 hover:text-black"
+                                    ? "text-blue-600 border-b-2 border-black"
+                                    : "text-gray-600 hover:text-white"
                             }`}
                             name="playlists"
                             onClick={(e) => setCurrent(e.target.name)}
@@ -151,7 +151,7 @@ function ChannelDashboard() {
                         </button>
                     </div>
 
-                    <div className="flex gap-x-4 gap-y-8 flex-wrap p-4">
+                    <div className="p-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
                         {current === "videos"
                             ? videos?.map((item) => (
                                   <VideoCard
@@ -161,6 +161,7 @@ function ChannelDashboard() {
                                       views={item.views}
                                       uploaded={item.createdAt.substr(0, 10)}
                                       buttons={false}
+                                      duration={item.duration}
                                       videoId={item._id}
                                   />
                               ))
