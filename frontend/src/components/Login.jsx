@@ -12,6 +12,7 @@ function Login() {
     const handler = async (e) => {
         e.preventDefault();
         try {
+            console.log(`username: ${username}, password: ${password}, ${import.meta.env.VITE_BACKEND_URL}/users/login`)
             const token = localStorage.getItem("accessToken");
             const res = await axios.post(
                 `${import.meta.env.VITE_BACKEND_URL}/users/login`,
@@ -23,7 +24,7 @@ function Login() {
                     withCredentials: true,
                 }
             );
-            // console.log("Login Success:", res.data);
+            console.log("Login Success:", res.data);
 
             localStorage.setItem("accessToken", res.data.data.accessToken);
             localStorage.setItem("refreshToken", res.data.data.refreshToken);
