@@ -6,149 +6,197 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
 
+/* ---------------- DROPDOWN ---------------- */
+
 function DropdownMenu({ buttons, onUpdate, onDelete, onAddToPlaylist, position }) {
-    return createPortal(
-        <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            style={{ top: position.top, left: position.left }}
-            className="fixed z-50 flex-col items-start bg-gray-800/95 text-gray-200 w-56 rounded-lg overflow-hidden shadow-xl"
-        >
-            {buttons ? (
-                <>
-                    <div onClick={onUpdate} className="w-full py-2 px-4 hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                        <i className="ri-edit-line"></i>Edit
-                    </div>
-                    <div onClick={onDelete} className="w-full py-2 px-4 hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                        <i className="ri-delete-bin-6-line"></i>Delete
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div onClick={onAddToPlaylist} className="w-full py-2 px-4 hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                        <i className="ri-play-list-add-line"></i>Add to playlist
-                    </div>
-                    <div className="w-full py-2 px-4 hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                        <i className="ri-time-line"></i>Save to Watch later
-                    </div>
-                    <div className="w-full py-2 px-4 hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                        <i className="ri-download-2-line"></i>Download
-                    </div>
-                    <div className="w-full py-2 px-4 hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                        <i className="ri-share-box-line"></i>Share
-                    </div>
-                    <div className="w-full py-2 px-4 hover:bg-gray-700 cursor-pointer flex items-center gap-2">
-                        <i className="ri-spam-3-line"></i>Not Interested
-                    </div>
-                </>
-            )}
-        </motion.div>,
-        document.body
-    );
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      style={{ top: position.top, left: position.left }}
+      className="fixed z-[999] w-56 rounded-xl overflow-hidden bg-gray-900/95 backdrop-blur-md border border-white/10 shadow-2xl"
+    >
+      <div className="flex flex-col text-sm text-gray-200">
+        {buttons ? (
+          <>
+            <MenuItem icon="ri-edit-line" label="Edit" onClick={onUpdate} />
+            <MenuItem icon="ri-delete-bin-6-line" label="Delete" onClick={onDelete} danger />
+          </>
+        ) : (
+          <>
+            <MenuItem icon="ri-play-list-add-line" label="Add to playlist" onClick={onAddToPlaylist} />
+            <MenuItem icon="ri-time-line" label="Save to Watch later" />
+            <MenuItem icon="ri-download-2-line" label="Download" />
+            <MenuItem icon="ri-share-box-line" label="Share" />
+            <MenuItem icon="ri-spam-3-line" label="Not Interested" />
+          </>
+        )}
+      </div>
+    </motion.div>,
+    document.body
+  );
 }
 
+function MenuItem({ icon, label, onClick, danger }) {
+  return (
+    <div
+      onClick={onClick}
+      className={`flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-white/10 transition ${
+        danger ? "text-red-400 hover:text-red-300" : ""
+      }`}
+    >
+      <i className={`${icon} text-lg`} />
+      <span>{label}</span>
+    </div>
+  );
+}
+
+/* ---------------- CARD ---------------- */
+
 function VideoCard({ thumbnail, title, owner, views, duration, uploaded, videoId, buttons }) {
-    const navigate = useNavigate();
-    const [uploadTime, setUploadTime] = useState("");
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
+  const navigate = useNavigate();
 
-    const updateVideoHandler = () => navigate(`update/${videoId}`);
-    const deleteVideoHandler = async () => {
-        const token = localStorage.getItem("accessToken");
-        await axios.delete(`http://localhost:8000/api/v1/videos/${videoId}`, {
-            headers: { Authorization: `Bearer ${token}`, withCredentials: true },
-        });
+  const [uploadTime, setUploadTime] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
+
+  const updateVideoHandler = () => navigate(`update/${videoId}`);
+
+  const deleteVideoHandler = async () => {
+    const token = localStorage.getItem("accessToken");
+    await axios.delete(`http://localhost:8000/api/v1/videos/${videoId}`, {
+      headers: { Authorization: `Bearer ${token}`, withCredentials: true },
+    });
+  };
+
+  const handleAddToPlaylist = () => {};
+  const handlePlayVideo = () => navigate(`/video/play/${videoId}`);
+  const navigateToChannelDashboard = () => navigate(`/channel-dashboard/${owner?.username}`);
+
+  /* -------- upload time formatter -------- */
+
+  useEffect(() => {
+    const timePassed = (uploaded) => {
+      const t = new Date();
+      const u = new Date(uploaded);
+      const sec = Math.floor((t - u) / 1000);
+
+      const map = [
+        [31536000, "year"],
+        [2592000, "month"],
+        [86400, "day"],
+        [3600, "hour"],
+        [60, "minute"],
+      ];
+
+      for (let [s, n] of map) {
+        const v = Math.floor(sec / s);
+        if (v >= 1) return setUploadTime(`${v} ${n}${v > 1 ? "s" : ""} ago`);
+      }
+
+      setUploadTime("Just now");
     };
 
-    const handleAddToPlaylist = () => {};
-    const handlePlayVideo = () => navigate(`/video/play/${videoId}`);
-    const navigateToChannelDashboard = () => navigate(`/channel-dashboard/${owner?.username}`);
+    timePassed(uploaded);
+  }, [uploaded]);
 
-    useEffect(() => {
-        const timePassed = (uploaded) => {
-            const today = new Date().toJSON().substring(0, 19);
-            const todayArr = today.split(/[-:T]/);
-            const uploadedArr = uploaded.substring(0, 19).split(/[-:T]/);
-            let i = 0;
-            while (i < 6 && todayArr[i] - uploadedArr[i] === 0) i++;
-            if (i === 0) setUploadTime(todayArr[i] - uploadedArr[i] + " years ago");
-            else if (i === 1) setUploadTime(todayArr[i] - uploadedArr[i] + " months ago");
-            else if (i === 2) setUploadTime(todayArr[i] - uploadedArr[i] + " days ago");
-            else if (i === 3) setUploadTime(todayArr[i] - uploadedArr[i] + " hours ago");
-            else if (i === 4) setUploadTime(todayArr[i] - uploadedArr[i] + " minutes ago");
-            else setUploadTime(todayArr[i] - uploadedArr[i] + " seconds ago");
-        };
-        timePassed(uploaded);
-    }, [uploaded]);
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMenuPos({ top: rect.bottom + 6, left: rect.left - 140 });
+    setMenuOpen((prev) => !prev);
+  };
 
-    const toggleMenu = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        setMenuPos({ top: rect.bottom + 5, left: rect.left });
-        setMenuOpen(!menuOpen);
-    };
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 250, damping: 18 }}
+      className="group h-fit bg-white/3 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl overflow-hidden hover:border-indigo-400/40 hover:shadow-indigo-500/20 transition duration-300"
+    >
+      {/* THUMBNAIL */}
+      <div className="relative w-full aspect-video overflow-hidden" onClick={handlePlayVideo}>
+        <motion.img
+          whileHover={{ scale: 1.05 }}
+          src={thumbnail}
+          alt={title}
+          className="w-full h-full object-cover transition duration-500"
+        />
 
-    return (
+        {/* gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70 opacity-0 group-hover:opacity-100 transition" />
+
+        {/* play icon */}
         <motion.div
-            whileHover={{ scale: 1.03 }}
-            transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            className="main cursor-pointer bg-gray-900 rounded-xl shadow-lg hover:shadow-indigo-600/30 transition-shadow duration-300"
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileHover={{ opacity: 1, scale: 1 }}
+          className="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover:opacity-100"
         >
-            <div className="relative w-full aspect-video overflow-hidden rounded-t-xl" onClick={handlePlayVideo}>
-                <motion.img
-                    whileHover={{ scale: 1.1 }}
-                    src={thumbnail}
-                    alt={title}
-                    className="w-full h-full object-cover transition-transform duration-500"
-                />
-                <h6 className="absolute bottom-2 right-2 bg-black/70 rounded-md px-2 py-0.5 text-xs text-white font-semibold">
-                    {parseFloat(duration).toFixed(2)}
-                </h6>
-            </div>
-
-            <div className="p-3 flex justify-between relative">
-                <div className="flex w-full gap-3">
-                    {owner && (
-                        <div
-                            className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-700 hover:scale-105 transition-transform"
-                            onClick={navigateToChannelDashboard}
-                        >
-                            <img src={owner.avatar} alt="owner avatar" className="h-full w-full object-cover" />
-                        </div>
-                    )}
-                    <div className="flex flex-col w-full" onClick={handlePlayVideo}>
-                        <h3 className="font-semibold text-white leading-snug line-clamp-2 hover:text-indigo-400 transition-colors">{title}</h3>
-                        <p className="text-sm text-gray-400">{owner?.username}</p>
-                        <p className="text-xs text-gray-500">{views} views • {uploadTime}</p>
-                    </div>
-                </div>
-
-                <button
-                    className="rounded-full h-9 w-9 flex items-center justify-center hover:bg-gray-700 transition-colors"
-                    onClick={toggleMenu}
-                >
-                    <i className="ri-more-2-line text-gray-300"></i>
-                </button>
-            </div>
-
-            <AnimatePresence>
-                {menuOpen && (
-                    <DropdownMenu
-                        buttons={buttons}
-                        onUpdate={updateVideoHandler}
-                        onDelete={deleteVideoHandler}
-                        onAddToPlaylist={handleAddToPlaylist}
-                        position={menuPos}
-                    />
-                )}
-            </AnimatePresence>
-
-            <div className="hidden absolute top-1/2 left-1/2 -translate-1/2 z-30 w-full add-to-playlist-modal">
-                <AddToPlaylist videoId={videoId} />
-            </div>
+          <i className="ri-play-circle-fill text-6xl drop-shadow-2xl" />
         </motion.div>
-    );
+
+        {/* duration */}
+        <span className="absolute bottom-2 right-2 bg-black/70 backdrop-blur px-2 py-0.5 text-xs rounded-md text-white">
+          {parseFloat(duration || 0).toFixed(2)}
+        </span>
+      </div>
+
+      {/* INFO */}
+      <div className="p-4 flex justify-between gap-3">
+
+        {/* content */}
+        <div className="flex gap-3 w-full">
+
+          {owner && (
+            <div
+              onClick={navigateToChannelDashboard}
+              className="w-10 h-10 rounded-full overflow-hidden border border-white/20 hover:scale-105 transition shrink-0"
+            >
+              <img src={owner.avatar} className="w-full h-full object-cover" />
+            </div>
+          )}
+
+          <div className="flex flex-col w-full" onClick={handlePlayVideo}>
+            <h3 className="font-semibold text-gray-100 leading-tight line-clamp-2 group-hover:text-indigo-400 transition">
+              {title}
+            </h3>
+            <p className="text-sm text-gray-400 hover:text-gray-200 transition">
+              {owner?.username}
+            </p>
+            <p className="text-xs text-gray-500">
+              {views} views • {uploadTime}
+            </p>
+          </div>
+        </div>
+
+        {/* menu */}
+        <button
+          onClick={toggleMenu}
+          className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-white/10 transition"
+        >
+          <i className="ri-more-2-line text-gray-300" />
+        </button>
+      </div>
+
+      {/* MENU */}
+      <AnimatePresence>
+        {menuOpen && (
+          <DropdownMenu
+            buttons={buttons}
+            onUpdate={updateVideoHandler}
+            onDelete={deleteVideoHandler}
+            onAddToPlaylist={handleAddToPlaylist}
+            position={menuPos}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* PLAYLIST MODAL HOOK */}
+      <div className="hidden">
+        <AddToPlaylist videoId={videoId} />
+      </div>
+    </motion.div>
+  );
 }
 
 export default VideoCard;
