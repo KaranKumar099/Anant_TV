@@ -26,7 +26,7 @@ function DropdownMenu({ buttons, onUpdate, onDelete, onAddToPlaylist, position }
         ) : (
           <>
             <MenuItem icon="ri-play-list-add-line" label="Add to playlist" onClick={onAddToPlaylist} />
-            <MenuItem icon="ri-time-line" label="Save to Watch later" />
+            <MenuItem icon="ri-time-line" label="Save to Watchlist" />
             <MenuItem icon="ri-download-2-line" label="Download" />
             <MenuItem icon="ri-share-box-line" label="Share" />
             <MenuItem icon="ri-spam-3-line" label="Not Interested" />
