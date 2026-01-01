@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { PlaylistCard, VideoCard } from "../index.js";
 import { motion, AnimatePresence } from "framer-motion";
+import HorizontalVideoCard from "../Cards/HorizontalVideoCard.jsx";
 
 function Home2() {
   const [videos, setVideos] = useState([]);
@@ -89,7 +90,7 @@ return (
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 200, opacity: 0 }}
           transition={{ type: "spring", stiffness: 250, damping: 20 }}
-          className="h-full bg-gray-900/70 border border-white/10 rounded-xl p-4 backdrop-blur-xl shadow-xl"
+          className="h-full bg-gray-900/70 rounded-xl p-1 backdrop-blur-xl shadow-xl"
         >
           {/* DROPDOWN */}
           <select
@@ -103,7 +104,7 @@ return (
             <option value="playlists">Playlists</option>
           </select>
           {/* DYNAMIC CONTENT */}
-          <div className="space-y-4 overflow-y-auto pr-1 custom-scroll">
+          <div className="space-y-2 overflow-y-auto pr-1 custom-scroll">
             {rightMode === "featured" && (
               <>
                 <h2 className="text-lg font-semibold text-indigo-300">Featured Live</h2>
@@ -111,15 +112,16 @@ return (
                   <motion.div
                     key={live._id}
                     whileHover={{ scale: 1.01 }}
-                    className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-fuchsia-400/40 shadow-lg"
+                    className="rounded-sm bg-white/5 border border-white/10 hover:border-fuchsia-400/40 shadow-lg p-1"
                   >
-                    <div className="relative w-full h-32 rounded-lg overflow-hidden">
-                      <img src={live.thumbnail} className="w-full h-full object-cover" />
-                      <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded-md">
-                        LIVE
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-200 line-clamp-2">{live.title}</p>
+                    <HorizontalVideoCard
+                      thumbnail="https://i.ytimg.com/vi/7wnove7K-ZQ/maxresdefault.jpg"
+                      duration="LIVE"
+                      title="Python Crash Course in Hindi | 5 Python Projects | Complete Python Tutorial"
+                      channel="CodeWithHarry"
+                      views="1.3M watching"
+                      isLive={true}
+                    />
                   </motion.div>
                 ))}
               </>
