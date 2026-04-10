@@ -25,9 +25,11 @@ function Layout() {
   };
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-screen flex flex-col overflow-hidden">
       <Header/>
-      <Outlet/>
+      <main className="flex-1 overflow-y-auto">
+        <Outlet/>
+      </main>
     </div>
   );
 }

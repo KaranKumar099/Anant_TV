@@ -5,11 +5,12 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 
 const getVideoComments = asyncHandler(async (req, res) => {
-    //TODO: get all comments for a video
     const { videoId } = req.params;
     const { page = 1, limit = 10 } = req.query;
 
-    const allCommments = await Comment.find({ video: videoId })
+    const allComments = await Comment.find({ video: videoId })
+        .populate("owner", "username avatar")
+        .sort("-createdAt")
         .skip((page - 1) * limit)
         .limit(parseInt(limit));
 
@@ -18,14 +19,13 @@ const getVideoComments = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                allCommments,
+                allComments,
                 "all comments of video fetched successfully"
             )
         );
 });
 
 const addComment = asyncHandler(async (req, res) => {
-    // TODO: add a comment to a video
     const { videoId } = req.params;
     const { content } = req.body;
 
@@ -33,11 +33,17 @@ const addComment = asyncHandler(async (req, res) => {
         throw new ApiError(401, "content is required");
     }
 
-    const addedComment = await Comment.create({
+    const comment = await Comment.create({
         content,
         video: videoId,
         owner: req.user._id,
     });
+
+    const addedComment = await Comment.findById(comment._id).populate("owner", "username avatar");
+
+    if (!addedComment) {
+        throw new ApiError(500, "Failed to add comment");
+    }
 
     return res
         .status(200)

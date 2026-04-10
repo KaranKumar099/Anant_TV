@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030712; /* Matches gray-950 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2937; /* Matches gray-800 */
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6366f1; /* Indigo-500 highlight */
+}
+
+/* Firefox Support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1f2937 #030712;
+}

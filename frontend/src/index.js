@@ -21,6 +21,7 @@ import ChannelDashboard from "./components/ChannelDashboard";
 import Header from "./components/Header";
 import SideBar from "./components/SideBar";
 import LogOut from "./components/LogOut";
+import NotFound from "./components/NotFound";
 
 export {
     Layout,
@@ -45,5 +46,6 @@ export {
     ChannelDashboard,
     Header,
     SideBar,
-    LogOut
+    LogOut,
+    NotFound
 };

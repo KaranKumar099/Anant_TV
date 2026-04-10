@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { RouterProvider, createBrowserRouter } from "react-router";
-import { AuthProvider } from "./Context/AuthContext.jsx";
+import { RouterProvider, createBrowserRouter, Navigate } from "react-router";
+import { AuthProvider, useAuth } from "./Context/AuthContext.jsx";
 import {
     Home,
     Layout,
@@ -21,8 +21,21 @@ import {
     PlayVideoPage,
     EditChannel,
     YourChannel,
-    ChannelDashboard
+    ChannelDashboard,
+    NotFound
 } from "./index.js";
+
+const Protected = ({ children }) => {
+    const { user } = useAuth();
+    // Allow checking... if user is explicitly null (not signed in)
+    // We check localStorage too as a fallback while auth is loading
+    const token = localStorage.getItem("accessToken");
+    
+    if (!user && !token) {
+        return <Navigate to="/not-found" replace />;
+    }
+    return children;
+};
 
 const router = createBrowserRouter([
     {
@@ -43,59 +56,67 @@ const router = createBrowserRouter([
             },
             {
                 path: "/user",
-                element: <User />,
+                element: <Protected><User /></Protected>,
             },
             {
                 path: "/user/subscriptions",
-                element: <Subscriptions />,
+                element: <Protected><Subscriptions /></Protected>,
             },
             {
                 path: "/user/watch-history",
-                element: <WatchHistory />,
+                element: <Protected><WatchHistory /></Protected>,
             },
             {
                 path: "/user/channel/:id",
-                element: <YourChannel />,
+                element: <Protected><YourChannel /></Protected>,
             },
             {
                 path: "/user/channel/edit",
-                element: <EditChannel />,
+                element: <Protected><EditChannel /></Protected>,
             },
             {
                 path: "/channel-dashboard/:username",
-                element: <ChannelDashboard />,
+                element: <Protected><ChannelDashboard /></Protected>,
             },
             {
                 path: "/your-videos",
-                element: <YourVideos />,
+                element: <Protected><YourVideos /></Protected>,
             },
             {
                 path: "/your-videos/publish",
-                element: <PublishVideo />,
+                element: <Protected><PublishVideo /></Protected>,
             },
             {
                 path: "/your-videos/update/:id",
-                element: <UpdateVideo />,
+                element: <Protected><UpdateVideo /></Protected>,
             },
             {
                 path: "/playlists",
-                element: <Playlists />,
+                element: <Protected><Playlists /></Protected>,
             },
             {
                 path: "/playlists/:playlistId",
-                element: <PlaylistPage />,
+                element: <Protected><PlaylistPage /></Protected>,
             },
             {
                 path: "/playlists/create",
-                element: <CreatePlaylist />,
+                element: <Protected><CreatePlaylist /></Protected>,
             },
             {
                 path: "/playlists/edit/:id",
-                element: <EditPlaylist />,
+                element: <Protected><EditPlaylist /></Protected>,
             },
             {
                 path: "/video/play/:videoId",
-                element: <PlayVideoPage />,
+                element: <Protected><PlayVideoPage /></Protected>,
+            },
+            {
+                path: "/not-found",
+                element: <NotFound />,
+            },
+            {
+                path: "*",
+                element: <NotFound />,
             },
         ],
     },
